@@ -5,9 +5,11 @@ import conf from "@/conf/config";
 import { Databases } from "appwrite";
 
 interface TweetProps {
-    tweet?: string | any
+    tweet?: string | any;
+    onTweetRemoved: any
 }
-const Tweet: React.FC<TweetProps> = ({ tweet }) => {
+
+const Tweet: React.FC<TweetProps> = ({ tweet, onTweetRemoved }) => {
     const onRemoveTweet = async () => {
         const databases = new Databases(client);
 
@@ -17,11 +19,10 @@ const Tweet: React.FC<TweetProps> = ({ tweet }) => {
                 conf.collectionId,
                 tweet.$id
             );
-            // onTweetRemoved(tweet)
+            onTweetRemoved(tweet)
         } catch(error: any) {
             // setIsModalOpen(true);
             console.log(error);
-            
         }
     }
     

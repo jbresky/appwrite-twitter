@@ -1,6 +1,8 @@
 'use client'
 
+import { Models } from "appwrite";
 import { useState } from "react";
+import CreateTweetForm from "./CreateTweetForm";
 import Tweet from "./Tweet";
 
 interface FeedProps {
@@ -8,8 +10,20 @@ interface FeedProps {
 }
 
 const Feed: React.FC<FeedProps> = ({ tweets: tweetsProp }) => {
-    const [tweets, setTweets] = useState(tweetsProp)
+    const [tweets, setTweets] = useState(tweetsProp);
 
+    const onTweetCreated = (newTweet: any) => {
+      setTweets((currTweets: any) => [newTweet, ...currTweets]);
+      console.log(newTweet);
+      
+    }
+    
+    const onTweetRemoved = (tweetToRemove: string) => {
+      setTweets((currTweets: any) => // try Models.Document
+      currTweets.filter((tweet: any) => tweet.$id !== tweetToRemove)
+      )
+    }
+    
     const tweetsSortedByCreatedDate = tweets.sort((a: any, b: any) => {
         return Number(new Date(b.$createdAt)) - Number(new Date(b.$createdAt));
     })
@@ -37,19 +51,19 @@ const Feed: React.FC<FeedProps> = ({ tweets: tweetsProp }) => {
             </a>
           </div>
         </div>
-{/*   
+  
         <hr className="border-gray-600" />
   
         <CreateTweetForm onTweetCreated={onTweetCreated} />
   
-        <hr className="border-gray-800 border-2" /> */}
+        <hr className="border-gray-800 border-2" />
   
         <div></div>
   
         {tweetsSortedByCreatedDate?.map((tweet: any) => (
           <Tweet
             // onLikeTweetCallback={onLikeTweetCallback}
-            // onTweetRemoved={onTweetRemoved}
+            onTweetRemoved={onTweetRemoved}
             key={tweet.$id}
             tweet={tweet}
           />
